@@ -1,0 +1,39 @@
+{
+  "name": "dual-n-back",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "prettier": "^3.9.6",
+    "typescript": "~5.8.3",
+    "vite": "^6.4.3",
+    "vitest": "^5.0.0"
+  },
+  "description": "A minimalist dual n-back test with recorded audio, keyboard controls, and private local results.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamesliuai/Dual-N-Back.git"
+  },
+  "license": "MIT"
+}

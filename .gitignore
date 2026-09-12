@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.DS_Store
+.sites-runtime/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.openai/
+coverage/
+*.log
+# Local naming research is not part of the application release.
+research/
