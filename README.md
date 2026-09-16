@@ -50,13 +50,13 @@ Leaving the tab or losing audio pauses the session. Resuming starts a three-seco
 
 ## Settings and protocol
 
-| Setting              | Default   | Available values                    |
-| -------------------- | --------- | ----------------------------------- |
-| Difficulty           | 2-back    | 1–9                                 |
-| Scored rounds        | 20        | 20, 40, or 60, plus N warmup rounds |
-| Time between stimuli | 3 seconds | 2, 2.5, 3, 4, or 5 seconds          |
-| Audio volume         | 80%       | 1–100%                              |
-| Response shortcuts   | A / L     | Two distinct letter keys            |
+| Setting              | Default     | Available values                    |
+| -------------------- | ----------- | ----------------------------------- |
+| Difficulty           | 2-back      | 1–9                                 |
+| Scored rounds        | 20          | 20, 40, or 60, plus N warmup rounds |
+| Time between stimuli | 2.5 seconds | 1, 1.5, 2, 2.5, 3, 4, or 5 seconds  |
+| Audio volume         | 80%         | 1–100%                              |
+| Response shortcuts   | A / L       | Two distinct letter keys            |
 
 Every supported session length has exactly **30% matches per channel**, including **10% simultaneous matches**. Non-target stimuli exclude accidental N-back matches. Sessions begin with a three-second countdown, and the center of the grid is a fixation point rather than a target.
 

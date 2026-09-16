@@ -107,15 +107,15 @@ describe('session timing and input', () => {
     expect(game.getSnapshot().answers.position).toBe(false);
     vi.advanceTimersByTime(500);
     expect(game.getSnapshot().visible).toBe(false);
-    vi.advanceTimersByTime(5500);
+    vi.advanceTimersByTime(2 * DEFAULT_SETTINGS.interval - 500);
     expect(game.getSnapshot().index).toBe(2);
     game.respond('position');
     game.respond('position');
     game.respond('audio');
     expect(game.getSnapshot().answers).toEqual({ position: true, audio: true });
-    vi.advanceTimersByTime(19 * 3000);
+    vi.advanceTimersByTime(19 * DEFAULT_SETTINGS.interval);
     expect(game.getSnapshot().index).toBe(21);
-    vi.advanceTimersByTime(2999);
+    vi.advanceTimersByTime(DEFAULT_SETTINGS.interval - 1);
     expect(game.getSnapshot().phase).toBe('running');
     game.respond('audio');
     expect(game.getSnapshot().answers.audio).toBe(true);
@@ -128,7 +128,7 @@ describe('session timing and input', () => {
     vi.useFakeTimers();
     const game = new GameEngine({ play: vi.fn(), stop: vi.fn() });
     game.start(DEFAULT_SETTINGS);
-    vi.advanceTimersByTime(9500);
+    vi.advanceTimersByTime(3000 + 2 * DEFAULT_SETTINGS.interval + 500);
     const trial = game.getSnapshot().trial;
     game.respond('position');
     game.pause();
@@ -139,7 +139,7 @@ describe('session timing and input', () => {
     vi.advanceTimersByTime(3000);
     expect(game.getSnapshot().trial).toEqual(trial);
     expect(game.getSnapshot().answers.position).toBe(false);
-    vi.advanceTimersByTime(20 * 3000);
+    vi.advanceTimersByTime(20 * DEFAULT_SETTINGS.interval);
     expect(game.getSnapshot().result?.interruptions).toBe(1);
     game.dispose();
   });

@@ -51,6 +51,8 @@ export function SettingsPanel({
           value={settings.interval}
           onChange={(e) => set({ interval: Number(e.target.value) })}
         >
+          <option value={1000}>1 second</option>
+          <option value={1500}>1.5 seconds</option>
           <option value={2000}>2 seconds</option>
           <option value={2500}>2.5 seconds</option>
           <option value={3000}>3 seconds</option>

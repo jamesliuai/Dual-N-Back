@@ -4,7 +4,7 @@ import type { Settings, Result, ChannelScore } from './game';
 const KEYS = { settings: 'nback.settings.v1', results: 'nback.results.v1' };
 const MAX_RESULTS = 30;
 const ROUNDS = [20, 40, 60];
-const INTERVALS = [2000, 2500, 3000, 4000, 5000];
+const INTERVALS = [1000, 1500, 2000, 2500, 3000, 4000, 5000];
 const usableKey = (v: unknown): v is string => typeof v === 'string' && /^[a-z]$/.test(v);
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);

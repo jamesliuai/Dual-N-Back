@@ -12,7 +12,7 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   n: 2,
   rounds: 20,
-  interval: 3000,
+  interval: 2500,
   volume: 80,
   positionKey: 'a',
   audioKey: 'l',
