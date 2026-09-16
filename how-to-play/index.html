@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" type="image/svg+xml" href="../brand/dual-n-back-mark.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../brand/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body class="guide-page">
+    <header class="app-header">
+      <a class="wordmark wordmark-link" href="../" aria-label="Dual N-Back home">
+        <img class="brand-mark" src="../brand/dual-n-back-mark.svg" width="28" height="28" alt="" />
+        <span>dual n-back</span>
+      </a>
+      <a class="text-button" href="../">Back to the game <span aria-hidden="true">↗</span></a>
+    </header>
+    <main class="guide-main reading-width">
+      <p class="eyebrow">The play guide</p>
+      <h1>How to play dual n-back</h1>
+      <p class="reading-intro">
+        One position. One spoken letter. Two sequences to keep in mind. This guide walks through
+        your first session, shows what a match looks like, and explains your results.
+      </p>
+      <nav class="guide-contents" aria-label="On this page">
+        <a href="#first-session">Your first session</a>
+        <a href="#examples">Match examples</a>
+        <a href="#controls">Controls</a>
+        <a href="#scoring">Scoring</a>
+        <a href="#questions">Common questions</a>
+      </nav>
+      <section id="first-session" class="guide-section">
+        <h2>Your first session</h2>
+        <p>
+          The “n” in n-back tells you how far back to compare. Start with 1-back to learn the
+          controls, then try 2-back when you are comfortable following both sequences. This app lets
+          you choose any level from 1-back to 9-back.
+        </p>
+        <ol class="guide-steps">
+          <li>
+            <strong>Choose a level and check your sound.</strong> Use the minus and plus buttons to
+            change difficulty. Select “Test audio” to check the spoken letters. Headphones can help
+            you hear clearly.
+          </li>
+          <li>
+            <strong>Start and watch both sequences.</strong> After a three-second countdown, a
+            square flashes in one of eight positions around the center of the grid while a letter
+            plays. The center is a reference point, not a target.
+          </li>
+          <li>
+            <strong>Compare with n rounds earlier.</strong> If the position matches, press the
+            Position button or <kbd>A</kbd>. If the letter matches, press the Audio button or
+            <kbd>L</kbd>. Respond to each sequence independently.
+          </li>
+          <li>
+            <strong>Keep updating what you remember.</strong> Each new round moves the comparison
+            forward by one. The first n rounds are a warmup: remember them, but do not score matches
+            yet. At the end, review your overall score and the two channel scores.
+          </li>
+        </ol>
+        <p>
+          The default session has 20 scored rounds at 2.5 seconds per round, plus the warmup. The
+          square is visible for half a second, but you can respond throughout the full interval. In
+          Settings, you can choose 20, 40, or 60 scored rounds and a pace from 1 to 5 seconds.
+        </p>
+      </section>
+      <section id="examples" class="guide-section">
+        <h2>What counts as a 2-back match?</h2>
+        <p>
+          Compare the current round with exactly two rounds earlier. Comparing with the immediately
+          previous round would be 1-back instead.
+        </p>
+        <div class="example-card">
+          <h3>Audio: C → H → C → H</h3>
+          <p>
+            Round 3 matches round 1: both are C. Round 4 matches round 2: both are H. Press Audio on
+            rounds 3 and 4. The first two rounds are the warmup.
+          </p>
+        </div>
+        <div class="example-card">
+          <h3>Position: top left → bottom right → top left</h3>
+          <p>
+            On round 3, the square is in the same position as round 1. Press Position. The letters
+            might be completely different; a position match still counts.
+          </p>
+        </div>
+        <p>
+          If both the letter and the position match their own values from two rounds earlier, press
+          both response buttons. If neither matches, make no response. A repeated letter such as C →
+          H → H is not an audio match on the third round in 2-back.
+        </p>
+      </section>
+      <section id="controls" class="guide-section">
+        <h2>Keyboard and touch controls</h2>
+        <table class="guide-table">
+          <caption>
+            Default controls; response keys can be changed in Settings.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Control</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><kbd>A</kbd> / Position</th>
+              <td>Mark a position match</td>
+            </tr>
+            <tr>
+              <th scope="row"><kbd>L</kbd> / Audio</th>
+              <td>Mark an audio match</td>
+            </tr>
+            <tr>
+              <th scope="row">Both response controls</th>
+              <td>Mark a match in both sequences</td>
+            </tr>
+            <tr>
+              <th scope="row">No response</th>
+              <td>Indicate that neither sequence matches</td>
+            </tr>
+            <tr>
+              <th scope="row"><kbd>Space</kbd></th>
+              <td>Start, pause, or resume</td>
+            </tr>
+            <tr>
+              <th scope="row"><kbd>Esc</kbd></th>
+              <td>Pause an active session</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          On a phone or tablet, use the on-screen buttons. Each sequence accepts one response per
+          scored round. Leaving the tab pauses the game; resuming gives you a countdown and replays
+          the interrupted round. Ending a paused session discards that session.
+        </p>
+      </section>
+      <section id="scoring" class="guide-section">
+        <h2>How dual n-back scores work here</h2>
+        <p>
+          This app uses balanced accuracy. Each sequence has two equally weighted parts: the
+          proportion of matches you correctly identify and the proportion of non-matches you
+          correctly leave alone. The overall score is the average of the position and audio scores.
+        </p>
+        <div class="example-card">
+          <h3>A scoring example</h3>
+          <p>
+            In a 20-round session, each sequence has 6 matches and 14 non-matches. Catch 5 of the 6
+            matches and correctly leave 12 of the 14 non-matches alone: your score for that sequence
+            is about 85%, the average of 83.3% and 85.7%.
+          </p>
+        </div>
+        <p>
+          Responding on every round or never responding produces 50%. Warmup rounds are excluded.
+          Open “Score breakdown” after a session to see hits, misses, false alarms, correct
+          rejections, and interruptions. Compare results at the same level and pace.
+        </p>
+      </section>
+      <section id="questions" class="guide-section">
+        <h2>Common questions</h2>
+        <h3>Is it free? Do I need an account?</h3>
+        <p>
+          It is free to play in your browser, with no signup or app installation. JavaScript and
+          audio playback need to be enabled for the game. This guide works without JavaScript.
+        </p>
+        <h3>Where are my results saved?</h3>
+        <p>
+          Your settings and latest 30 completed sessions are saved in this browser on this device.
+          They are not sent to a server or synced between devices. Clearing the site's browser data
+          removes them. Reloading does not restore an unfinished session.
+        </p>
+        <h3>When should I increase the difficulty?</h3>
+        <p>
+          First get comfortable tracking both sequences at your current level. When you want more of
+          a challenge, increase the level by one or adjust the pace in Settings. Keep conditions
+          consistent when comparing scores. The app leaves the difficulty choice to you.
+        </p>
+        <h3>What does my score measure?</h3>
+        <p>
+          It describes your performance on this task at the selected difficulty and pace. It is not
+          an IQ score or a clinical assessment, and improvement in the game does not establish an
+          improvement in everyday memory.
+        </p>
+      </section>
+      <div class="guide-cta">
+        <h2>Ready for a round?</h2>
+        <p>Choose a level, check your sound, and start when you are ready.</p>
+        <a class="primary" href="../">Play dual n-back</a>
+      </div>
+    </main>
+    <footer class="guide-footer reading-width">
+      <a href="../">Free dual n-back online</a>
+      <span>No signup. Your results stay on this device.</span>
+    </footer>
+  </body>
+</html>

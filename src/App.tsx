@@ -32,6 +32,7 @@ export default function App() {
   const savedId = useRef('');
   const testTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lock = useRef(false);
+  const gameView = useRef<HTMLElement>(null);
   const active = ['running', 'countdown', 'paused'].includes(state.phase);
   const running = state.phase === 'running';
   const warmup = running && state.index < settings.n;
@@ -109,6 +110,13 @@ export default function App() {
       )
         return;
       const key = e.key.toLowerCase();
+      // Let Space scroll when reading content occupies most of the viewport.
+      if (
+        !active &&
+        gameView.current &&
+        gameView.current.getBoundingClientRect().bottom < window.innerHeight / 2
+      )
+        return;
       if (key === ' ' && !(e.target instanceof HTMLElement && e.target.closest('button, a'))) {
         e.preventDefault();
         if (running || state.phase === 'countdown') engine.pause();
@@ -176,7 +184,7 @@ export default function App() {
           </button>
         </div>
       </header>
-      <main className={`main ${state.phase === 'complete' ? 'is-complete' : ''}`}>
+      <main ref={gameView} className={`main ${state.phase === 'complete' ? 'is-complete' : ''}`}>
         {state.phase === 'complete' && state.result ? (
           <Results
             result={state.result}
@@ -191,7 +199,7 @@ export default function App() {
         ) : (
           <section className="test-surface" aria-label="Dual n-back test">
             <div className="test-heading">
-              <h1>Dual {settings.n}-back</h1>
+              <h1>Dual N-Back</h1>
               <p>
                 Match the position or sound from {settings.n} {settings.n === 1 ? 'step' : 'steps'}{' '}
                 ago.
@@ -424,6 +432,9 @@ export default function App() {
           <p className="help-note">
             New to this? Start with 1-back. Use the buttons on a touch screen. Press Space to pause;
             resuming replays the interrupted round.
+          </p>
+          <p className="help-note">
+            <a href="./how-to-play/">Read the full guide, with examples and scoring details</a>
           </p>
           <button className="primary" onClick={() => setPanel(null)}>
             Got it
