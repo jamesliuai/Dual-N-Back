@@ -221,11 +221,12 @@ export class GameEngine {
     if (
       this.snapshot.phase !== 'running' ||
       this.snapshot.index < this.settings.n ||
-      this.snapshot.answers[channel] ||
       performance.now() >= this.deadline
     )
       return;
-    this.update({ answers: { ...this.snapshot.answers, [channel]: true } });
+    this.update({
+      answers: { ...this.snapshot.answers, [channel]: !this.snapshot.answers[channel] },
+    });
   }
   pause(reason = 'Take your time. Your session is right here.') {
     if (!['running', 'countdown'].includes(this.snapshot.phase)) return;

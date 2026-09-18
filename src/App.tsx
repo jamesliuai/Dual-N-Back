@@ -410,7 +410,8 @@ export default function App() {
               <p>
                 Press <kbd>{settings.positionKey.toUpperCase()}</kbd> if the position matches. Press{' '}
                 <kbd>{settings.audioKey.toUpperCase()}</kbd> if the letter matches. Press both for
-                both; do nothing if neither matches.
+                both; do nothing if neither matches. Press the same key or button again to undo that
+                answer before the round ends.
               </p>
             </li>
             <li>

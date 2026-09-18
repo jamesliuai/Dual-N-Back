@@ -46,7 +46,7 @@ In 2-back, for example, the third letter in **C → H → C** matches the first 
 | **Space**                     | Start, pause, or resume a session     |
 | **Esc**                       | Pause an active session               |
 
-The first N rounds are an unscored warmup. Each channel accepts one response per scored round; held keys do not repeat. The square disappears after 500 ms, but the response window stays open for the full interval, including the last round.
+The first N rounds are an unscored warmup. Press a response key or button again to toggle that answer off; you can change either answer until the round ends. Only the final selections are scored, and held keys do not repeat. The square disappears after 500 ms, but the response window stays open for the full interval, including the last round.
 
 Leaving the tab or losing audio pauses the session. Resuming starts a three-second countdown and replays the interrupted round with fresh responses. Completed results record the number of interruptions. Ending a paused session discards it.
 

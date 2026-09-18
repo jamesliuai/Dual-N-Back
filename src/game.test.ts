@@ -95,7 +95,78 @@ describe('dual n-back protocol', () => {
 
 describe('session timing and input', () => {
   afterEach(() => vi.useRealTimers());
-  it('gives the last round its full response window, ignores warmup and duplicate responses, then completes once', () => {
+  it('toggles channels independently and scores only the final decision in each round', () => {
+    vi.useFakeTimers();
+    const game = new GameEngine({ play: vi.fn(), stop: vi.fn() });
+    game.start(DEFAULT_SETTINGS);
+    vi.advanceTimersByTime(3000);
+    const trials: Trial[] = [];
+    for (let i = 0; i < DEFAULT_SETTINGS.n + DEFAULT_SETTINGS.rounds; i++) {
+      const { trial, answers } = game.getSnapshot();
+      trials.push(trial!);
+      expect(answers).toEqual({ position: false, audio: false });
+      if (i >= DEFAULT_SETTINGS.n) {
+        // Revise both choices after the square disappears, then leave only true matches.
+        vi.advanceTimersByTime(500);
+        game.respond('position');
+        game.respond('audio');
+        game.respond('position');
+        expect(game.getSnapshot().answers).toEqual({ position: false, audio: true });
+        game.respond('audio');
+        expect(game.getSnapshot().answers).toEqual({ position: false, audio: false });
+        for (const channel of ['position', 'audio'] as const) {
+          if (trial![channel] === trials[i - DEFAULT_SETTINGS.n][channel]) {
+            game.respond(channel);
+          }
+        }
+        vi.advanceTimersByTime(DEFAULT_SETTINGS.interval - 500);
+      } else {
+        game.respond('position');
+        game.respond('audio');
+        expect(game.getSnapshot().answers).toEqual({ position: false, audio: false });
+        vi.advanceTimersByTime(DEFAULT_SETTINGS.interval);
+      }
+    }
+    const result = game.getSnapshot().result;
+    expect(result?.accuracy).toBe(100);
+    for (const channel of ['position', 'audio'] as const) {
+      expect(result?.[channel]).toEqual({
+        hits: 6,
+        misses: 0,
+        falseAlarms: 0,
+        correctRejections: 14,
+        accuracy: 100,
+      });
+    }
+    game.respond('position');
+    expect(game.getSnapshot().result).toBe(result);
+    game.dispose();
+  });
+  it('rejects changes while paused and at the response deadline', () => {
+    vi.useFakeTimers();
+    const game = new GameEngine({ play: vi.fn(), stop: vi.fn() });
+    game.start(DEFAULT_SETTINGS);
+    vi.advanceTimersByTime(3000 + DEFAULT_SETTINGS.n * DEFAULT_SETTINGS.interval);
+    game.respond('position');
+    game.pause();
+    game.respond('position');
+    game.respond('audio');
+    expect(game.getSnapshot().answers).toEqual({ position: true, audio: false });
+    game.resume();
+    game.respond('position');
+    expect(game.getSnapshot().answers.position).toBe(true);
+    vi.advanceTimersByTime(3000);
+    game.respond('position');
+    const now = vi
+      .spyOn(performance, 'now')
+      .mockReturnValue(performance.now() + DEFAULT_SETTINGS.interval);
+    game.respond('position');
+    game.respond('audio');
+    expect(game.getSnapshot().answers).toEqual({ position: true, audio: false });
+    now.mockRestore();
+    game.dispose();
+  });
+  it('gives the last round its full response window, ignores warmup, then completes once', () => {
     vi.useFakeTimers();
     const audio = { play: vi.fn(), stop: vi.fn() };
     const game = new GameEngine(audio);
@@ -109,7 +180,6 @@ describe('session timing and input', () => {
     expect(game.getSnapshot().visible).toBe(false);
     vi.advanceTimersByTime(2 * DEFAULT_SETTINGS.interval - 500);
     expect(game.getSnapshot().index).toBe(2);
-    game.respond('position');
     game.respond('position');
     game.respond('audio');
     expect(game.getSnapshot().answers).toEqual({ position: true, audio: true });
