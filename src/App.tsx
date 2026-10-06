@@ -9,6 +9,8 @@ import {
   Pause,
   Play,
   History,
+  Moon,
+  Sun,
   Volume2,
 } from 'lucide-react';
 import { GameEngine } from './game';
@@ -18,10 +20,34 @@ import { loadSettings, saveSettings, loadResults, saveResult } from './storage';
 import { Modal } from './Modal';
 import { SettingsPanel } from './SettingsPanel';
 import { Results } from './Results';
+import { getTheme, subscribeTheme, toggleTheme } from './theme';
+
+function BrandMark() {
+  return (
+    <svg className="brand-mark" viewBox="0 0 28 28" width="24" height="24" aria-hidden="true">
+      <g className="ink">
+        {[
+          [0, 0],
+          [10, 0],
+          [20, 0],
+          [0, 10],
+          [10, 10],
+          [0, 20],
+          [10, 20],
+          [20, 20],
+        ].map(([x, y]) => (
+          <rect key={`${x}-${y}`} x={x} y={y} width="8" height="8" rx="1.75" />
+        ))}
+      </g>
+      <rect className="accent" x="20" y="10" width="8" height="8" rx="1.75" />
+    </svg>
+  );
+}
 
 export default function App() {
   const [engine] = useState(() => new GameEngine(letterAudio));
   const state = useSyncExternalStore(engine.subscribe, engine.getSnapshot);
+  const theme = useSyncExternalStore(subscribeTheme, getTheme);
   const [settings, setSettings] = useState(loadSettings);
   const [panel, setPanel] = useState<'help' | 'settings' | 'history' | null>(null);
   const [busy, setBusy] = useState(false);
@@ -156,14 +182,8 @@ export default function App() {
     <div className={`app ${active ? 'session-active' : ''}`}>
       <header className="app-header">
         <div className="wordmark">
-          <img
-            className="brand-mark"
-            src={`${import.meta.env.BASE_URL}brand/dual-n-back-mark.svg`}
-            width="28"
-            height="28"
-            alt=""
-          />
-          <span>dual n-back</span>
+          <BrandMark />
+          <span>N-Back Studio</span>
         </div>
         <div className="header-actions">
           <button
@@ -181,6 +201,16 @@ export default function App() {
           >
             <SettingsIcon size={19} />
             <span>Settings</span>
+          </button>
+          <button
+            className="icon-button theme-toggle"
+            onClick={toggleTheme}
+            disabled={active}
+            aria-label="Dark mode"
+            aria-pressed={theme === 'dark'}
+          >
+            <Moon size={18} className="icon-moon" />
+            <Sun size={18} className="icon-sun" />
           </button>
         </div>
       </header>
@@ -217,8 +247,9 @@ export default function App() {
                     >
                       <Minus size={18} />
                     </button>
-                    <span aria-label={`Difficulty ${settings.n}`} aria-live="polite">
-                      {settings.n}
+                    <span aria-live="polite">
+                      <span className="sr-only">Difficulty: </span>
+                      {settings.n}-back
                     </span>
                     <button
                       className="step-button"
@@ -230,7 +261,7 @@ export default function App() {
                     </button>
                   </div>
                   <p className="session-meta">
-                    {settings.rounds} rounds <span>·</span> ~{estimatedMinutes || 1} min
+                    {settings.rounds} rounds <span>/</span> ~{estimatedMinutes || 1} min
                   </p>
                 </>
               ) : (
@@ -244,7 +275,7 @@ export default function App() {
                       : state.phase === 'paused'
                         ? 'The current round will replay on resume'
                         : state.phase === 'countdown'
-                          ? 'Find your focus. Watch and listen.'
+                          ? 'Watch the grid and listen'
                           : 'Respond only when there’s a match'}
                   </p>
                 </>
@@ -312,9 +343,7 @@ export default function App() {
               ))}
             </div>
             <p className="response-hint">
-              {warmup
-                ? `Build your memory. Matching starts after ${settings.n} ${settings.n === 1 ? 'round' : 'rounds'}.`
-                : 'Press both if both match'}
+              {warmup ? `Matching starts on round ${settings.n + 1}` : 'Press both if both match'}
             </p>
             <div className="main-action">
               {state.phase === 'paused' ? (
@@ -336,7 +365,7 @@ export default function App() {
               ) : (
                 <button className="primary" onClick={() => void start()} disabled={busy || testing}>
                   {busy ? 'Preparing audio…' : 'Start session'}
-                  {!busy && <ArrowRight size={17} />}
+                  {!busy && <ArrowRight size={16} />}
                 </button>
               )}
             </div>
@@ -369,7 +398,16 @@ export default function App() {
       <footer className="app-footer">
         <span>
           <kbd>Space</kbd> {active ? 'to pause or resume' : 'to start'}
-          <span className="footer-desktop">{active ? '' : ' · Esc to pause'}</span>
+          <span className="footer-desktop">
+            {active ? (
+              ''
+            ) : (
+              <>
+                {' · '}
+                <kbd>Esc</kbd> to pause
+              </>
+            )}
+          </span>
         </span>
         <div>
           {history.length > 0 && (
@@ -382,7 +420,7 @@ export default function App() {
               Recent results
             </button>
           )}
-          <span className="privacy-note">Your results stay on this device</span>
+          <span className="privacy-note">Results stay on this device</span>
         </div>
       </footer>
       {panel === 'settings' && (
@@ -396,12 +434,14 @@ export default function App() {
         />
       )}
       {panel === 'help' && (
-        <Modal title="Two things to keep in mind." onClose={() => setPanel(null)}>
-          <p className="modal-intro">One position. One spoken letter. Both arrive together.</p>
+        <Modal title="How to play" onClose={() => setPanel(null)}>
+          <p className="modal-intro">
+            Each round flashes a square and plays a spoken letter at the same time.
+          </p>
           <ol className="instructions">
             <li>
-              <strong>Watch the square. Listen to the letter.</strong>
-              <p>A square flashes for half a second. Keep its position and the sound in memory.</p>
+              <strong>Watch the square and listen to the letter.</strong>
+              <p>The square shows for half a second. Remember both its position and the letter.</p>
             </li>
             <li>
               <strong>
@@ -415,11 +455,12 @@ export default function App() {
               </p>
             </li>
             <li>
-              <strong>Keep going, one round at a time.</strong>
+              <strong>Take your time on each round.</strong>
               <p>
-                The first {settings.n} {settings.n === 1 ? 'round is' : 'rounds are'} just for
-                remembering. You have the full {settings.interval / 1000} seconds to respond, even
-                after the square disappears.
+                {settings.n === 1 ? 'The first round is' : `The first ${settings.n} rounds are`}{' '}
+                just for remembering. You have the full {settings.interval / 1000}{' '}
+                {settings.interval === 1000 ? 'second' : 'seconds'} to respond, even after the
+                square disappears.
               </p>
             </li>
           </ol>
@@ -431,11 +472,11 @@ export default function App() {
             <p>The third letter matches the first. That’s an audio match.</p>
           </div>
           <p className="help-note">
-            New to this? Start with 1-back. Use the buttons on a touch screen. Press Space to pause;
-            resuming replays the interrupted round.
+            New to this? Start with 1-back. On a touch screen, use the buttons. Press{' '}
+            <kbd>Space</kbd> to pause; resuming replays the interrupted round.
           </p>
           <p className="help-note">
-            <a href="./how-to-play/">Read the full guide, with examples and scoring details</a>
+            <a href="./how-to-play/">Read the full guide with examples and scoring details</a>
           </p>
           <button className="primary" onClick={() => setPanel(null)}>
             Got it
@@ -463,7 +504,7 @@ export default function App() {
       )}
       {panel === 'history' && (
         <Modal title="Recent results" onClose={() => setPanel(null)}>
-          <p className="modal-intro">Your last 30 sessions, saved only in this browser.</p>
+          <p className="modal-intro">Your last 30 sessions, saved in this browser.</p>
           <div className="history-list">
             {history.map((result) => (
               <div className="history-row" key={result.id}>
@@ -474,7 +515,7 @@ export default function App() {
                       month: 'short',
                       day: 'numeric',
                     })}{' '}
-                    · {result.settings.rounds} rounds
+                    / {result.settings.rounds} rounds
                   </span>
                 </div>
                 <strong>

@@ -3,7 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111214" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply the saved theme before first paint. Keep in sync with src/theme.ts.
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem('nback.theme.v1');
+        } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+        document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+          meta.content = theme === 'dark' ? '#111214' : '#fcfcfb';
+        });
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="../brand/dual-n-back-mark.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="../brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="../brand/apple-touch-icon.png" />
@@ -11,18 +28,48 @@
   </head>
   <body class="guide-page">
     <header class="app-header">
-      <a class="wordmark wordmark-link" href="../" aria-label="Dual N-Back home">
-        <img class="brand-mark" src="../brand/dual-n-back-mark.svg" width="28" height="28" alt="" />
-        <span>dual n-back</span>
+      <a class="wordmark" href="../">
+        <svg class="brand-mark" viewBox="0 0 28 28" width="24" height="24" aria-hidden="true">
+          <g class="ink">
+            <rect width="8" height="8" rx="1.75" />
+            <rect x="10" width="8" height="8" rx="1.75" />
+            <rect x="20" width="8" height="8" rx="1.75" />
+            <rect y="10" width="8" height="8" rx="1.75" />
+            <rect x="10" y="10" width="8" height="8" rx="1.75" />
+            <rect y="20" width="8" height="8" rx="1.75" />
+            <rect x="10" y="20" width="8" height="8" rx="1.75" />
+            <rect x="20" y="20" width="8" height="8" rx="1.75" />
+          </g>
+          <rect class="accent" x="20" y="10" width="8" height="8" rx="1.75" />
+        </svg>
+        <span>N-Back Studio</span>
       </a>
-      <a class="text-button" href="../">Back to the game <span aria-hidden="true">↗</span></a>
+      <div class="header-actions">
+        <button
+          type="button"
+          class="icon-button theme-toggle"
+          data-theme-toggle
+          aria-label="Dark mode"
+          aria-pressed="false"
+        >
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+            />
+          </svg>
+        </button>
+        <a class="pill-link" href="../">Play <span aria-hidden="true">→</span></a>
+      </div>
     </header>
     <main class="guide-main reading-width">
-      <p class="eyebrow">The play guide</p>
       <h1>How to play dual n-back</h1>
       <p class="reading-intro">
-        One position. One spoken letter. Two sequences to keep in mind. This guide walks through
-        your first session, shows what a match looks like, and explains your results.
+        Each round shows a square and plays a spoken letter, and you track both sequences at once.
+        This guide covers your first session, what counts as a match, and how scoring works.
       </p>
       <nav class="guide-contents" aria-label="On this page">
         <a href="#first-session">Your first session</a>
@@ -72,24 +119,61 @@
           Compare the current round with exactly two rounds earlier. Comparing with the immediately
           previous round would be 1-back instead.
         </p>
-        <div class="example-card">
-          <h3>Audio: C → H → C → H</h3>
-          <p>
-            Round 3 matches round 1: both are C. Round 4 matches round 2: both are H. Press Audio on
-            rounds 3 and 4. The first two rounds are the warmup.
-          </p>
-        </div>
-        <div class="example-card">
-          <h3>Position: top left → bottom right → top left</h3>
-          <p>
-            On round 3, the square is in the same position as round 1. Press Position. The letters
-            might be completely different; a position match still counts.
-          </p>
-        </div>
+        <figure class="sequence" aria-labelledby="example-caption">
+          <ol>
+            <li>
+              <span class="sr-only">Round 1: top left, letter C, warmup.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter" aria-hidden="true">C</span>
+              <span class="seq-tag" aria-hidden="true">Warmup</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 2: bottom right, letter H, warmup.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i
+              ></span>
+              <span class="seq-letter" aria-hidden="true">H</span>
+              <span class="seq-tag" aria-hidden="true">Warmup</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 3: top left, letter K, position match.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i class="on match"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter" aria-hidden="true">K</span>
+              <span class="seq-tag match" aria-hidden="true">Position</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 4: top right, letter H, audio match.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i></i><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter match" aria-hidden="true">H</span>
+              <span class="seq-tag match" aria-hidden="true">Audio</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 5: top left, letter K, position and audio match.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i class="on match"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter match" aria-hidden="true">K</span>
+              <span class="seq-tag match" aria-hidden="true">Both</span>
+            </li>
+          </ol>
+          <figcaption id="example-caption">
+            Five rounds of 2-back. Rounds 1 and 2 are the warmup.
+          </figcaption>
+        </figure>
         <p>
-          If both the letter and the position match their own values from two rounds earlier, press
-          both response buttons. If neither matches, make no response. A repeated letter such as C →
-          H → H is not an audio match on the third round in 2-back.
+          In round 3 the square is top left, as in round 1: press Position. The letters differ, but
+          a position match still counts. In round 4 the letter is H, as in round 2: press Audio.
+          Round 5 repeats both the position and the letter from round 3, so press both.
+        </p>
+        <p>
+          If neither matches, make no response. A letter repeated back to back, such as C → H → H,
+          is not an audio match on the third round in 2-back.
         </p>
       </section>
       <section id="controls" class="guide-section">
@@ -192,8 +276,9 @@
       </div>
     </main>
     <footer class="guide-footer reading-width">
-      <a href="../">Free dual n-back online</a>
-      <span>No signup. Your results stay on this device.</span>
+      <a href="../">N-Back Studio — free dual n-back online</a>
+      <span>No signup. Results stay on this device.</span>
     </footer>
+    <script type="module" src="/src/guide.ts"></script>
   </body>
 </html>

@@ -3,7 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#111214" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply the saved theme before first paint. Keep in sync with src/theme.ts.
+      (function () {
+        var theme;
+        try {
+          theme = localStorage.getItem('nback.theme.v1');
+        } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+        document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+          meta.content = theme === 'dark' ? '#111214' : '#fcfcfb';
+        });
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="%BASE_URL%brand/dual-n-back-mark.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="%BASE_URL%brand/apple-touch-icon.png" />
@@ -13,8 +30,23 @@
     <div id="root">
       <div class="app">
         <header class="app-header">
-          <span class="wordmark">dual n-back</span>
-          <a class="text-button" href="./how-to-play/">How to play</a>
+          <span class="wordmark">
+            <svg class="brand-mark" viewBox="0 0 28 28" width="24" height="24" aria-hidden="true">
+              <g class="ink">
+                <rect width="8" height="8" rx="1.75" />
+                <rect x="10" width="8" height="8" rx="1.75" />
+                <rect x="20" width="8" height="8" rx="1.75" />
+                <rect y="10" width="8" height="8" rx="1.75" />
+                <rect x="10" y="10" width="8" height="8" rx="1.75" />
+                <rect y="20" width="8" height="8" rx="1.75" />
+                <rect x="10" y="20" width="8" height="8" rx="1.75" />
+                <rect x="20" y="20" width="8" height="8" rx="1.75" />
+              </g>
+              <rect class="accent" x="20" y="10" width="8" height="8" rx="1.75" />
+            </svg>
+            <span>N-Back Studio</span>
+          </span>
+          <a class="text-button muted" href="./how-to-play/">How to play</a>
         </header>
         <main class="main">
           <div class="test-surface test-heading">
@@ -32,56 +64,95 @@
     </div>
     <section class="learn-section" aria-labelledby="about-heading">
       <div class="reading-width">
-        <p class="eyebrow">A little practice, at your own pace</p>
         <h2 id="about-heading">Free dual n-back memory training</h2>
         <p class="reading-intro">
-          Play dual n-back online in a clean, distraction-free space. Follow a square and a spoken
-          letter, then recognize when either repeats from a few steps earlier. Start straight away,
-          with no account or download.
+          Play dual n-back online, free and without an account. Follow a square and a spoken letter,
+          and respond when either one repeats from a set number of rounds earlier.
         </p>
-        <div class="learn-grid">
+        <figure class="sequence" aria-labelledby="sequence-caption">
+          <ol>
+            <li>
+              <span class="sr-only">Round 1: top left, letter C, warmup.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter" aria-hidden="true">C</span>
+              <span class="seq-tag" aria-hidden="true">Warmup</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 2: bottom right, letter H, warmup.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i
+              ></span>
+              <span class="seq-letter" aria-hidden="true">H</span>
+              <span class="seq-tag" aria-hidden="true">Warmup</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 3: top left, letter K, position match.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i class="on match"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter" aria-hidden="true">K</span>
+              <span class="seq-tag match" aria-hidden="true">Position</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 4: top right, letter H, audio match.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i></i><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter match" aria-hidden="true">H</span>
+              <span class="seq-tag match" aria-hidden="true">Audio</span>
+            </li>
+            <li>
+              <span class="sr-only">Round 5: top left, letter K, position and audio match.</span>
+              <span class="mini-grid" aria-hidden="true"
+                ><i class="on match"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+              ></span>
+              <span class="seq-letter match" aria-hidden="true">K</span>
+              <span class="seq-tag match" aria-hidden="true">Both</span>
+            </li>
+          </ol>
+          <figcaption id="sequence-caption">
+            A 2-back sequence. Each round is compared with the round two steps earlier. Rounds 1 and
+            2 have nothing to compare with yet, so they are a warmup.
+          </figcaption>
+        </figure>
+        <div class="learn-list">
           <section aria-labelledby="what-heading">
             <h3 id="what-heading">What is dual n-back?</h3>
             <p>
-              Dual n-back is a working-memory task with two independent sequences: positions and
-              sounds. The “n” is how many steps back you compare. In 1-back, compare with the
-              previous round; in 2-back, compare with two rounds earlier.
+              A working-memory task with two independent sequences: positions and sounds. The “n” is
+              how many steps back you compare. In 1-back, compare with the previous round; in
+              2-back, with two rounds earlier.
             </p>
           </section>
           <section aria-labelledby="play-heading">
             <h3 id="play-heading">How to play</h3>
             <p>
-              Watch the square and listen to the letter. By default, press <kbd>A</kbd> for a
-              position match and <kbd>L</kbd> for an audio match, or use the on-screen buttons.
-              Respond to both when both match, and do nothing when neither matches.
-            </p>
-          </section>
-          <section aria-labelledby="example-heading">
-            <h3 id="example-heading">A simple 2-back example</h3>
-            <p>
-              Hear <strong>C → H → C</strong>? The third letter matches the letter two steps
-              earlier, so that is an audio match. Check the square separately: a sound match does
-              not always mean a position match.
+              Press <kbd>A</kbd> for a position match and <kbd>L</kbd> for an audio match, or use
+              the on-screen buttons. Press both when both match, and nothing when neither does. A
+              sound match does not imply a position match.
             </p>
           </section>
           <section aria-labelledby="score-heading">
-            <h3 id="score-heading">Understand your score</h3>
+            <h3 id="score-heading">Your score</h3>
             <p>
-              Scores balance the matches you catch with the non-matches you correctly leave alone.
-              Your overall score averages position and audio performance. Compare sessions at the
-              same difficulty and pace; the opening warmup rounds do not count.
+              Catching matches and correctly ignoring non-matches count equally. The overall score
+              averages position and audio. Warmup rounds are not scored, so compare sessions at the
+              same level and pace.
+            </p>
+          </section>
+          <section aria-labelledby="options-heading">
+            <h3 id="options-heading">Options</h3>
+            <p>
+              Choose 1-back to 9-back, a session length, and a pace from 1 to 5 seconds. Settings
+              and your last 30 results are saved in this browser only.
             </p>
           </section>
         </div>
-        <div class="reading-callout">
-          <p>
-            Choose 1–9-back, adjust the pace, and review your recent results. Settings and scores
-            stay in this browser, on this device.
-          </p>
-          <a class="guide-link" href="./how-to-play/"
-            >Read the full dual n-back guide <span aria-hidden="true">→</span></a
-          >
-        </div>
+        <a class="guide-link" href="./how-to-play/"
+          >Read the full guide <span aria-hidden="true">→</span></a
+        >
       </div>
     </section>
     <script type="module" src="/src/main.tsx"></script>

@@ -30,10 +30,10 @@ export function Results({
     <section className="results" aria-labelledby="results-title">
       <div className="result-heading">
         <h1 id="results-title" tabIndex={-1} ref={heading}>
-          Session complete.
+          Session complete
         </h1>
         <p>
-          Dual {result.settings.n}-back <span className="dot-separator">·</span>{' '}
+          Dual {result.settings.n}-back <span className="dot-separator">/</span>{' '}
           {result.settings.rounds} rounds
         </p>
       </div>
@@ -57,8 +57,7 @@ export function Results({
         ))}
       </div>
       <p className="result-explanation">
-        An equal balance of finding matches and avoiding false alarms. 50% is the no-response
-        baseline.
+        Catching matches and ignoring non-matches count equally. Never responding scores 50%.
       </p>
       <button
         className="details-toggle"
@@ -95,8 +94,9 @@ export function Results({
             </tbody>
           </table>
           <p>
-            The first {result.settings.n} warmup{' '}
-            {result.settings.n === 1 ? 'round is' : 'rounds are'} excluded.
+            {result.settings.n === 1
+              ? 'The warmup round is excluded.'
+              : `The first ${result.settings.n} warmup rounds are excluded.`}
             {result.interruptions > 0
               ? ` Paused ${result.interruptions} ${result.interruptions === 1 ? 'time' : 'times'}; interrupted rounds were replayed.`
               : ''}
@@ -105,7 +105,7 @@ export function Results({
       )}
       <div className="result-actions">
         <button className="primary" onClick={onAgain} disabled={busy}>
-          {busy ? 'Preparing audio…' : 'Play again'} <ArrowRight size={17} />
+          {busy ? 'Preparing audio…' : 'Play again'} <ArrowRight size={16} />
         </button>
         {recommendation !== result.settings.n ? (
           <button
@@ -126,7 +126,7 @@ export function Results({
         )}
       </div>
       <p className="save-note">
-        {saved ? 'Saved on this device. Just for you.' : 'This browser could not save your result.'}
+        {saved ? 'Saved to this browser' : 'This browser could not save your result.'}
       </p>
     </section>
   );

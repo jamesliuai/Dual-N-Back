@@ -75,7 +75,7 @@ Both never responding and responding on every scored round produce 50%. Warmup r
 
 ## Storage and privacy
 
-Settings and the latest 30 completed results are saved in this browser's `localStorage`. Results do not sync between browsers or devices, and clearing this site's browser data removes them. If storage is unavailable, sessions still work, but settings or results may not persist. Reloading the page does not restore an unfinished session.
+Settings, your light or dark mode choice, and the latest 30 completed results are saved in this browser's `localStorage`. Appearance defaults to System, which follows the device setting. Results do not sync between browsers or devices, and clearing this site's browser data removes them. If storage is unavailable, sessions still work, but settings or results may not persist. Reloading the page does not restore an unfinished session.
 
 The app sends no results to a server. It uses local/system fonts and serves bundled audio and app assets from the same origin. The audio attribution links open external websites only when followed.
 

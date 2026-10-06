@@ -1,6 +1,9 @@
+import { useSyncExternalStore } from 'react';
 import { DEFAULT_SETTINGS } from './game';
 import type { Settings } from './game';
 import { Modal } from './Modal';
+import { getThemePreference, setThemePreference, subscribeTheme } from './theme';
+import type { ThemePreference } from './theme';
 
 export function SettingsPanel({
   settings,
@@ -17,6 +20,7 @@ export function SettingsPanel({
   testing: boolean;
   error: string;
 }) {
+  const themePreference = useSyncExternalStore(subscribeTheme, getThemePreference);
   const set = (patch: Partial<Settings>) => onChange({ ...settings, ...patch });
   const key = (channel: 'positionKey' | 'audioKey', value: string) => {
     const other = channel === 'positionKey' ? 'audioKey' : 'positionKey';
@@ -24,8 +28,29 @@ export function SettingsPanel({
     set({ [channel]: value, ...(value === settings[other] ? { [other]: settings[channel] } : {}) });
   };
   return (
-    <Modal title="Make it yours" onClose={onClose}>
-      <p className="modal-intro">A few adjustments. The rest is just focus.</p>
+    <Modal title="Settings" onClose={onClose}>
+      <div className="setting-row">
+        <div>
+          <span className="setting-label" id="appearance-label">
+            Appearance
+          </span>
+          <p>System follows your device</p>
+        </div>
+        <div className="segmented" role="radiogroup" aria-labelledby="appearance-label">
+          {(['system', 'light', 'dark'] as ThemePreference[]).map((option) => (
+            <label key={option}>
+              <input
+                type="radio"
+                name="theme"
+                value={option}
+                checked={themePreference === option}
+                onChange={() => setThemePreference(option)}
+              />
+              {option[0].toUpperCase() + option.slice(1)}
+            </label>
+          ))}
+        </div>
+      </div>
       <div className="setting-row">
         <div>
           <label htmlFor="rounds">Session length</label>

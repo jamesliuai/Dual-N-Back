@@ -79,7 +79,7 @@ export function seoPlugin(siteUrl?: string): Plugin {
           { tag: 'meta', attrs: { property: 'og:type', content: 'website' }, injectTo: 'head' },
           {
             tag: 'meta',
-            attrs: { property: 'og:site_name', content: 'Dual N-Back' },
+            attrs: { property: 'og:site_name', content: 'N-Back Studio' },
             injectTo: 'head',
           },
           { tag: 'meta', attrs: { property: 'og:title', content: page.title }, injectTo: 'head' },
